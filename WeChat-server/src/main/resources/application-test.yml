@@ -1,0 +1,11 @@
+WeChat:
+  mysql:
+    ip: 127.0.0.0
+    port: 3306
+    db: WeChat
+    username: root
+    password: 123456
+  redis:
+    host: 192.168.38.129
+    port: 5672
+    password: 123456
