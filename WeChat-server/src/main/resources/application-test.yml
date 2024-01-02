@@ -1,11 +1,21 @@
 WeChat:
   mysql:
-    ip: 127.0.0.0
+    ip: 127.0.0.1
     port: 3306
-    db: WeChat
+    db: wechat
     username: root
     password: 123456
   redis:
     host: 192.168.38.129
-    port: 5672
+    port: 6379
     password: 123456
+    database: 3
+  # 微信配置
+  wx:
+    appid: wxa7f0490627dc1779
+    secret: 2d307692ef87b59c5e7a92d7fc2ff76b
+    token: admin
+    aesKey: 123
+    callback: http://48f8fd34.r9.cpolar.top/user/wx/callback
+  jwt:
+    secret: ycl1234566789

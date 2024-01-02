@@ -12,7 +12,7 @@ import java.util.List;
  * @author <a href="https://github.com/binarywang">Binary Wang</a>
  */
 @Data
-@ConfigurationProperties(prefix = "wx.mp")
+@ConfigurationProperties(prefix = "wechat.wx")
 public class WxMpProperties {
     /**
      * 是否使用redis存储access token

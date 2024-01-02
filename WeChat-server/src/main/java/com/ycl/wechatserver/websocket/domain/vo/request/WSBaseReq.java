@@ -1,4 +1,4 @@
-package com.ycl.wechatserver.websocket.domain.vo.req;
+package com.ycl.wechatserver.websocket.domain.vo.request;
 
 import com.ycl.wechatserver.websocket.domain.enums.WSReqTypeEnum;
 import lombok.AllArgsConstructor;

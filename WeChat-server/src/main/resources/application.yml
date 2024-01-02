@@ -5,7 +5,7 @@ spring:
   application:
     name: WeChat
   datasource:
-    url: jdbc:mysql://${WeChat.mysql.ip}:${WeChat.mysql.port}/${WeChat.mysql.db}?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://${WeChat.mysql.ip}:${WeChat.mysql.port}/${WeChat.mysql.db}?useSSL=false&serverTimezone=UTC
     username: ${WeChat.mysql.username}
     password: ${WeChat.mysql.password}
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -15,7 +15,7 @@ spring:
     # Redis服务器端口号
     port: ${WeChat.redis.port}
     # 使用的数据库索引，默认是0
-    database: 3
+    database: ${WeChat.redis.database}
     # 连接超时时间
     timeout: 1800000
     # 设置密码
@@ -27,3 +27,15 @@ spring:
 # mybatis-plus配置
 mybatis-plus:
   mapper-locations: classpath:/mapper/*.xml
+
+# 微信配置
+wechat:
+  wx:
+    configs:
+      - appid: ${WeChat.wx.appid}
+        secret: ${WeChat.wx.secret}
+        token: ${WeChat.wx.token}
+        aesKey: ${WeChat.wx.aesKey}
+    callback: ${WeChat.wx.callback}
+  jwt:
+    secret: ${WeChat.jwt.secret}

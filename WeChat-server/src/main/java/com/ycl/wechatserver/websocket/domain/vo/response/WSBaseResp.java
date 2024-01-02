@@ -1,4 +1,4 @@
-package com.ycl.wechatserver.websocket.domain.vo.resp;
+package com.ycl.wechatserver.websocket.domain.vo.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
