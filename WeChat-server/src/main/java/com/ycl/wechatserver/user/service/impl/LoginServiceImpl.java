@@ -3,6 +3,7 @@ package com.ycl.wechatserver.user.service.impl;
 import com.ycl.wechatserver.user.service.LoginService;
 import com.ycl.wechatserver.utils.JwtUtil;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -29,8 +30,18 @@ public class LoginServiceImpl implements LoginService {
     }
 
     @Override
+    @Async
     public void refreshTokenIfNecessary(String token) {
-
+        // 获取uid
+        Long uid = getValidUid(token);
+        // 首先判断key是否是存在的
+        Long expire = stringRedisTemplate.getExpire(USER_TOKEN_KEY, TimeUnit.DAYS);
+        // 如果expire为0的话 表示key是不存在的 或者该token过期了
+        if (expire == 0) {
+            return;
+        }
+        // 刷新token
+        stringRedisTemplate.expire(USER_TOKEN_KEY+uid,USER_TOKEN_TTL,TimeUnit.DAYS);
     }
 
     @Override

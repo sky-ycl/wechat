@@ -18,6 +18,8 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static com.ycl.wechatserver.constant.RedisConstant.USER_TOKEN_KEY;
+
 @SpringBootTest
 class WeChatServerApplicationTests {
 
@@ -91,5 +93,11 @@ class WeChatServerApplicationTests {
 
 	@Test
 	public void testRedisExpire(){
+		Long expire = stringRedisTemplate.getExpire(USER_TOKEN_KEY + 3,TimeUnit.DAYS);
+		System.out.println(expire);
+		Long expire1 = stringRedisTemplate.getExpire(USER_TOKEN_KEY + 4, TimeUnit.DAYS);
+		System.out.println(expire1);
+		Long expire2 = stringRedisTemplate.getExpire("name");
+		System.out.println(expire2);
 	}
 }
