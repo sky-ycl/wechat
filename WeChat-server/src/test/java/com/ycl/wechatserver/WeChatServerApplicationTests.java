@@ -4,6 +4,7 @@ import com.ycl.wechatserver.user.domain.entity.User;
 import com.ycl.wechatserver.user.mapper.UserMapper;
 import com.ycl.wechatserver.user.service.LoginService;
 import com.ycl.wechatserver.utils.JwtUtil;
+import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
@@ -11,16 +12,20 @@ import org.junit.jupiter.api.Test;
 import org.redisson.Redisson;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import static com.ycl.wechatserver.constant.RedisConstant.USER_TOKEN_KEY;
 
 @SpringBootTest
+@Slf4j
 class WeChatServerApplicationTests {
 
 	@Resource
@@ -99,5 +104,19 @@ class WeChatServerApplicationTests {
 		System.out.println(expire1);
 		Long expire2 = stringRedisTemplate.getExpire("name");
 		System.out.println(expire2);
+	}
+
+	@Autowired
+	private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+
+	@Test
+	public void testThread() throws InterruptedException {
+		threadPoolTaskExecutor.execute(()->{
+			if(1==1){
+				log.error("123");
+				throw new RuntimeException("1234");
+			}
+		});
+		Thread.sleep(200);
 	}
 }
