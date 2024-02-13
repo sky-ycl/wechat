@@ -1,4 +1,4 @@
-package com.ycl.wechatserver.thread;
+package com.ycl.wechatserver.common.thread;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

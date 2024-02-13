@@ -2,7 +2,7 @@ package com.ycl.wechatserver.user.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.ycl.wechatserver.config.WxMpProperties;
+import com.ycl.wechatserver.common.config.WxMpProperties;
 import com.ycl.wechatserver.user.builder.TextBuilder;
 import com.ycl.wechatserver.user.domain.entity.User;
 import com.ycl.wechatserver.user.mapper.UserMapper;
@@ -16,11 +16,9 @@ import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.RegEx;
 import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 

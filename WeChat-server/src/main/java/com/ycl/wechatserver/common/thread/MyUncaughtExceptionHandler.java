@@ -1,4 +1,4 @@
-package com.ycl.wechatserver.thread;
+package com.ycl.wechatserver.common.thread;
 
 import lombok.extern.slf4j.Slf4j;
 

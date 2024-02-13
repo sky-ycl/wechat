@@ -1,4 +1,4 @@
-package com.ycl.wechatserver.config;
+package com.ycl.wechatserver.common.config;
 
 import cn.hutool.json.JSONUtil;
 import lombok.Data;

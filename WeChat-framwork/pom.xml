@@ -17,6 +17,7 @@
 	<modules>
 		<module>WeChat-common-start</module>
 	</modules>
+
 	<properties>
 		<java.version>17</java.version>
 	</properties>

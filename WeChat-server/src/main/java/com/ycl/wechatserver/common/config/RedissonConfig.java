@@ -1,4 +1,4 @@
-package com.ycl.wechatserver.config;
+package com.ycl.wechatserver.common.config;
 
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;

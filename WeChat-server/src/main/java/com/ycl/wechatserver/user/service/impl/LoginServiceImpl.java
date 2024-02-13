@@ -11,8 +11,8 @@ import javax.annotation.Resource;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-import static com.ycl.wechatserver.constant.RedisConstant.USER_TOKEN_KEY;
-import static com.ycl.wechatserver.constant.RedisConstant.USER_TOKEN_TTL;
+import static com.ycl.wechatserver.common.constant.RedisConstant.USER_TOKEN_KEY;
+import static com.ycl.wechatserver.common.constant.RedisConstant.USER_TOKEN_TTL;
 
 
 @Service

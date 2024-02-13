@@ -1,6 +1,6 @@
-package com.ycl.wechatserver.config;
+package com.ycl.wechatserver.common.config;
 
-import com.ycl.wechatserver.thread.MyThreadFactory;
+import com.ycl.wechatserver.common.thread.MyThreadFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;

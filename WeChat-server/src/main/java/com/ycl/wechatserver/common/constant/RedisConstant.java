@@ -1,4 +1,4 @@
-package com.ycl.wechatserver.constant;
+package com.ycl.wechatserver.common.constant;
 
 public class RedisConstant {
 
