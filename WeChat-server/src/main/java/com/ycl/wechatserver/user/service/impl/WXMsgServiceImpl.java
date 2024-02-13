@@ -2,6 +2,7 @@ package com.ycl.wechatserver.user.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.ycl.wechatserver.config.WxMpProperties;
 import com.ycl.wechatserver.user.builder.TextBuilder;
 import com.ycl.wechatserver.user.domain.entity.User;
 import com.ycl.wechatserver.user.mapper.UserMapper;
@@ -19,6 +20,7 @@ import javax.annotation.RegEx;
 import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -38,8 +40,8 @@ public class WXMsgServiceImpl implements WXMsgService {
     @Resource
     private WebSocketService webSocketService;
 
-    // @Value("${wechat.wx.callback}")
-    private static String callback = "http://72212277.r15.cpolar.top/user/wx/callback";
+    @Resource
+    private WxMpProperties wxMpProperties;
 
     /**
      * openid和登录code的关系
@@ -65,13 +67,14 @@ public class WXMsgServiceImpl implements WXMsgService {
         if (user != null && user.getAvatar() != null) {
             //用户登录逻辑
             webSocketService.scanLoginSuccess(code, user.getId());
+            return null;
         } else {
-            // 推送链接让用户授权
-            WAIT_AUTHORIZE_MAP.put(openId, code);
             // 用户未注册需要对用户进行注册
             User user1 = new User();
             user1.setOpenId(openId);
             userService.registered(user1);
+            // 推送链接让用户授权
+            WAIT_AUTHORIZE_MAP.put(openId, code);
             // 用户等待授权
             webSocketService.waitAuthorize(code);
         }
@@ -94,7 +97,6 @@ public class WXMsgServiceImpl implements WXMsgService {
         // 通过openid获取用户id
         wrapper.eq(User::getOpenId, userInfo.getOpenid());
         User user = userMapper.selectOne(wrapper);
-
         webSocketService.scanLoginSuccess(code, user.getId());
     }
 
@@ -109,6 +111,7 @@ public class WXMsgServiceImpl implements WXMsgService {
     }
 
     private String getURL(String appid) {
+        String callback = wxMpProperties.getCallback();
         System.out.println(callback);
         try {
             String redirectUri = URLEncoder.encode(callback, "UTF-8");

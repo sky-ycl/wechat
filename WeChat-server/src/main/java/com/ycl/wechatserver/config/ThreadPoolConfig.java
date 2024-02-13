@@ -17,7 +17,7 @@ public class ThreadPoolConfig implements AsyncConfigurer {
     /**
      * 项目共用线程池
      */
-    public static final String MALLCHAT_EXECUTOR = "wechatExecutor";
+    public static final String WECHAT_EXECUTOR = "wechatExecutor";
     /**
      * websocket通信线程池
      */
@@ -25,12 +25,12 @@ public class ThreadPoolConfig implements AsyncConfigurer {
 
     @Override
     public Executor getAsyncExecutor() {
-        return mallchatExecutor();
+        return wechatExecutor();
     }
 
-    @Bean(MALLCHAT_EXECUTOR)
+    @Bean(WECHAT_EXECUTOR)
     @Primary
-    public ThreadPoolTaskExecutor mallchatExecutor() {
+    public ThreadPoolTaskExecutor wechatExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setWaitForTasksToCompleteOnShutdown(true); //线程池优雅停机
         executor.setCorePoolSize(10);

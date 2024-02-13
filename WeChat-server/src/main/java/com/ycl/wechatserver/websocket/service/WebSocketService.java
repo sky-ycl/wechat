@@ -24,4 +24,11 @@ public interface WebSocketService {
      * @param code
      */
     void waitAuthorize(Integer code);
+
+    /**
+     * 登录认证  防止用户刷新后需要重新进行websocket连接
+     * @param channel
+     * @param token
+     */
+    void authorize(Channel channel, String token);
 }

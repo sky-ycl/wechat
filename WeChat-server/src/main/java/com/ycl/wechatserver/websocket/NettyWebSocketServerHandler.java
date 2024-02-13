@@ -1,8 +1,10 @@
 package com.ycl.wechatserver.websocket;
 
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONUtil;
+import com.ycl.wechatserver.utils.NettyUtil;
 import com.ycl.wechatserver.websocket.domain.enums.WSReqTypeEnum;
 import com.ycl.wechatserver.websocket.domain.vo.request.WSBaseReq;
 import com.ycl.wechatserver.websocket.service.WebSocketService;
@@ -33,23 +35,28 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<Tex
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        // 用户下线
         userOffLine(ctx.channel());
     }
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-        if (evt instanceof WebSocketServerProtocolHandler.HandshakeComplete) {
-            log.info("握手完成");
-        } else if (evt instanceof IdleStateEvent) {
-            IdleStateEvent event = (IdleStateEvent) evt;
-            if (event.state() == IdleState.READER_IDLE) {
-                System.out.println("读空闲");
+
+        if (evt instanceof IdleStateEvent) {
+            IdleStateEvent idleStateEvent = (IdleStateEvent) evt;
+            // 读空闲
+            if (idleStateEvent.state() == IdleState.READER_IDLE) {
+                // 关闭用户的连接
                 userOffLine(ctx.channel());
             }
-
-            //TODO 用户下线
-            ctx.channel().close();
+        } else if (evt instanceof WebSocketServerProtocolHandler.HandshakeComplete) {
+            this.webSocketService.connect(ctx.channel());
+            String token = NettyUtil.getAttr(ctx.channel(), NettyUtil.TOKEN);
+            if (StrUtil.isNotBlank(token)) {
+                this.webSocketService.authorize(ctx.channel(), token);
+            }
         }
+        super.userEventTriggered(ctx, evt);
     }
 
     @Override
@@ -61,6 +68,7 @@ public class NettyWebSocketServerHandler extends SimpleChannelInboundHandler<Tex
         WSReqTypeEnum wsReqTypeEnum = WSReqTypeEnum.of(wsBaseReq.getType());
         switch (wsReqTypeEnum) {
             case AUTHORIZE:
+                webSocketService.authorize(ctx.channel(), wsBaseReq.getData());
                 break;
             case LOGIN:
                 log.info("请求二维码 = " + msg.text());

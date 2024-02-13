@@ -1,7 +1,5 @@
 package com.ycl.wechatserver.user.controller;
 
-import com.ycl.wechatserver.user.domain.entity.User;
-import com.ycl.wechatserver.user.mapper.UserMapper;
 import com.ycl.wechatserver.user.service.WXMsgService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -103,7 +101,7 @@ public class WxController {
         WxOAuth2AccessToken accessToken = wxService.getOAuth2Service().getAccessToken(code);
         WxOAuth2UserInfo userInfo = wxService.getOAuth2Service().getUserInfo(accessToken, "zh_CN");
         wxMsgService.authorize(userInfo);
-        String url="www.baidu.com";
+        String url="https://www.baidu.com/";
         return new RedirectView(url);
     }
 

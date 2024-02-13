@@ -84,6 +84,7 @@ public class WebSocketServiceImpl implements WebSocketService {
 
     /**
      * 移除用户的连接
+     *
      * @param channel
      */
     @Override
@@ -95,36 +96,54 @@ public class WebSocketServiceImpl implements WebSocketService {
     public void scanLoginSuccess(Integer code, Long uid) {
         // 确定连接在机器上
         Channel channel = WAIT_LOGIN_MAP.getIfPresent(code);
-        if(Objects.isNull(channel)){
+        if (Objects.isNull(channel)) {
             return;
         }
         // 移除code
         WAIT_LOGIN_MAP.invalidate(code);
         User user = userMapper.selectById(uid);
         // 获取登录模块获取token
-        String token=loginService.getToken(uid);
-        // 将用户的基本信息返回给前端
-        sendMessage(channel,WebSocketAdapter.buildLoginResp(user,token));
+        String token = loginService.getToken(uid);
+        // 用户登录成功
+        loginSuccess(channel, user, token);
     }
 
     /**
      * 用户等待授权
+     *
      * @param code
      */
     @Override
     public void waitAuthorize(Integer code) {
         Channel channel = WAIT_LOGIN_MAP.getIfPresent(code);
-        if(Objects.isNull(channel)){
+        if (Objects.isNull(channel)) {
             return;
         }
-        sendMessage(channel,WebSocketAdapter.buildWaitAuthorize());
+        sendMessage(channel, WebSocketAdapter.buildWaitAuthorize());
+    }
+
+    /**
+     * 登录认证  防止用户刷新后需要重新进行websocket连接
+     *
+     * @param channel
+     * @param token
+     */
+    @Override
+    public void authorize(Channel channel, String token) {
+        Long uid = loginService.getValidUid(token);
+        if (uid != null) {
+            User user = userMapper.selectById(uid);
+            // 用户登录成功
+            loginSuccess(channel, user, token);
+        } else {
+            sendMessage(channel, WebSocketAdapter.buildInvalidTokenResp());
+        }
     }
 
     private void sendMessage(Channel channel, WSBaseResp<?> request) {
         // 将消息发送给前端
         channel.writeAndFlush(new TextWebSocketFrame(JSONUtil.toJsonStr(request)));
     }
-
 
     /**
      * 获取登录code
@@ -138,7 +157,21 @@ public class WebSocketServiceImpl implements WebSocketService {
         while (WAIT_LOGIN_MAP.asMap().putIfAbsent(code, channel) != null) {
             code = RandomUtil.randomInt(Integer.MAX_VALUE);
         }
-
         return code;
+    }
+
+    /**
+     * 用户登录成功逻辑
+     *
+     * @param channel
+     * @param user
+     * @param token
+     */
+    private void loginSuccess(Channel channel, User user, String token) {
+        // 保存用户channel的对应uid
+        ONLINE_WS_MAP.put(channel,new WSChannelExtraDTO(user.getId()));
+        // todo 用户登录上线事件
+        // 将用户信息发送给前端
+        sendMessage(channel, WebSocketAdapter.buildLoginResp(user, token));
     }
 }

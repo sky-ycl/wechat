@@ -18,7 +18,9 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -118,5 +120,15 @@ class WeChatServerApplicationTests {
 			}
 		});
 		Thread.sleep(200);
+	}
+
+	@Test
+	public void testMap(){
+		Map<Integer,Object> map=new HashMap<>();
+		map.put(1,null);
+		Object o = map.get(1);
+		System.out.println(o);
+		map.put(1,1);
+		System.out.println(map.get(1));
 	}
 }

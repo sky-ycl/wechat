@@ -48,7 +48,6 @@ public class WxMpConfiguration {
                 .stream().map(a -> {
                     WxMpDefaultConfigImpl configStorage;
                     configStorage = new WxMpDefaultConfigImpl();
-
                     configStorage.setAppId(a.getAppId());
                     configStorage.setSecret(a.getSecret());
                     configStorage.setToken(a.getToken());

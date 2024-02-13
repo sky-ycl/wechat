@@ -14,7 +14,6 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
-import io.netty.handler.timeout.IdleStateHandler;
 import io.netty.util.NettyRuntime;
 import io.netty.util.concurrent.Future;
 import lombok.extern.slf4j.Slf4j;
@@ -79,13 +78,17 @@ public class NettyWebSocketServer {
                          *  2. 这就是为什么当浏览器发送大量数据时，就会发出多次 http请求的原因
                          */
                         pipeline.addLast(new HttpObjectAggregator(8192));
+
+                        // 保存请求头
+                        pipeline.addLast(new MyHandshakeHandler());
+
                         //保存用户ip
                         // pipeline.addLast(new HttpHeadersHandler());
                         /**
                          * 说明：
                          *  1. 对于 WebSocket，它的数据是以帧frame 的形式传递的；
                          *  2. 可以看到 WebSocketFrame 下面有6个子类
-                         *  3. 浏览器发送请求时： ws://localhost:7000/hello 表示请求的uri
+                         *  3. 浏览器发送请求时： ws://localhost:8090/hello 表示请求的uri
                          *  4. WebSocketServerProtocolHandler 核心功能是把 http协议升级为 ws 协议，保持长连接；
                          *      是通过一个状态码 101 来切换的
                          */

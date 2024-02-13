@@ -36,12 +36,12 @@ public class LoginServiceImpl implements LoginService {
         Long uid = getValidUid(token);
         // 首先判断key是否是存在的
         Long expire = stringRedisTemplate.getExpire(USER_TOKEN_KEY, TimeUnit.DAYS);
-        // 如果expire为0的话 表示key是不存在的 或者该token过期了
-        if (expire == 0) {
+        // 如果expire<=0的话 表示key是不存在的 或者该token过期了
+        if (expire <= 0) {
             return;
         }
         // 刷新token
-        stringRedisTemplate.expire(USER_TOKEN_KEY+uid,USER_TOKEN_TTL,TimeUnit.DAYS);
+        stringRedisTemplate.expire(USER_TOKEN_KEY + uid, USER_TOKEN_TTL, TimeUnit.DAYS);
     }
 
     @Override
@@ -54,6 +54,7 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public Long getValidUid(String token) {
+        // 解析Token 获取uid
         Long uid = jwtUtil.getUidOrNull(token);
         if (uid == null) {
             return null;

@@ -24,6 +24,11 @@ public class WxMpProperties {
      */
     private List<MpConfig> configs;
 
+    /**
+     * 设置回调地址
+     */
+    private String callback;
+
     @Data
     public static class MpConfig {
         /**
