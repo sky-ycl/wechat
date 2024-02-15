@@ -1,5 +1,6 @@
 package com.ycl.wechatserver;
 
+import com.ycl.wechatserver.common.exception.CommonErrorEnum;
 import com.ycl.wechatserver.user.domain.entity.User;
 import com.ycl.wechatserver.user.mapper.UserMapper;
 import com.ycl.wechatserver.user.service.LoginService;
@@ -128,5 +129,11 @@ class WeChatServerApplicationTests {
 		System.out.println(o);
 		map.put(1,1);
 		System.out.println(map.get(1));
+	}
+
+	@Test
+	public void testEnum(){
+		Integer code = CommonErrorEnum.SYSTEM_ERROR.getCode();
+		System.out.println(code);
 	}
 }

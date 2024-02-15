@@ -1,6 +1,7 @@
 package com.ycl.wechatserver.user.controller;
 
 import com.ycl.wechatserver.user.service.WXMsgService;
+import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
@@ -22,6 +23,7 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/user/wx")
+@Api(tags = "微信相关接口")
 public class WxController {
 
     private final WxMpService wxService;

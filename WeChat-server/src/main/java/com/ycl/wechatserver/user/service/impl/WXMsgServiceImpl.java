@@ -87,6 +87,7 @@ public class WXMsgServiceImpl implements WXMsgService {
         LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.set(User::getName, userInfo.getNickname())
                 .set(User::getAvatar, userInfo.getHeadImgUrl())
+                .set(User::getSex,userInfo.getSex())
                 .eq(User::getOpenId, userInfo.getOpenid());
         userMapper.update(null, updateWrapper);
         // 当用户授权完需要移除WAIT_AUTHORIZE_MAP对应的openid

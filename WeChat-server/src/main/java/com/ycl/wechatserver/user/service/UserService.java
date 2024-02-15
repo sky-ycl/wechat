@@ -1,7 +1,10 @@
 package com.ycl.wechatserver.user.service;
 
+import com.ycl.wechatserver.common.domain.vo.response.ApiResult;
+import com.ycl.wechatserver.user.domain.dto.ModifyNameDto;
 import com.ycl.wechatserver.user.domain.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ycl.wechatserver.user.domain.vo.UserInfo;
 
 /**
  *
@@ -14,4 +17,17 @@ public interface UserService extends IService<User> {
      * @return
      */
     Integer registered(User user);
+
+    /**
+     * 获取用户信息
+     * @return
+     */
+    UserInfo getUserinfo();
+
+    /**
+     * 修改用户名
+     * @param modifyNameDto
+     * @return
+     */
+    void modify(ModifyNameDto modifyNameDto);
 }
