@@ -1,5 +1,6 @@
-package com.ycl.wechatserver.common.domain.enums;
+package com.ycl.wechatserver.user.domain.enums;
 
+import com.ycl.wechatserver.common.domain.enums.ItemTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

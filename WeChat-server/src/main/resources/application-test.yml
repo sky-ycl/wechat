@@ -16,6 +16,6 @@ WeChat:
     secret: 2d307692ef87b59c5e7a92d7fc2ff76b
     token: admin
     aesKey: 123
-    callback: http://bc72e10.r11.cpolar.top/user/wx/callback
+    callback: http://6308edc0.r25.cpolar.top/user/wx/callback
   jwt:
     secret: ycl1234566789

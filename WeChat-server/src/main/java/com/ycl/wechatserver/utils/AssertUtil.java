@@ -2,6 +2,7 @@ package com.ycl.wechatserver.utils;
 
 
 import cn.hutool.core.util.ObjectUtil;
+import com.ycl.wechatserver.common.exception.BusinessErrorEnum;
 import com.ycl.wechatserver.common.exception.BusinessException;
 import com.ycl.wechatserver.common.exception.CommonErrorEnum;
 import com.ycl.wechatserver.common.exception.ErrorEnum;
@@ -153,7 +154,7 @@ public class AssertUtil {
 
     private static void throwException(ErrorEnum errorEnum, Object... arg) {
         if (Objects.isNull(errorEnum)) {
-            errorEnum = CommonErrorEnum.FREQUENCY_LIMIT;
+            errorEnum = BusinessErrorEnum.BUSINESS_ERROR;
         }
         throw new BusinessException(errorEnum.getErrorCode(), MessageFormat.format(errorEnum.getErrorMsg(), arg));
     }

@@ -20,8 +20,8 @@ public class MvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(tokenInterceptor)
-                .addPathPatterns("/wechat/**");
+                .addPathPatterns("/capi/**");
         registry.addInterceptor(collectorInterceptor)
-                .addPathPatterns("/wechat/**");
+                .addPathPatterns("/capi/**");
     }
 }

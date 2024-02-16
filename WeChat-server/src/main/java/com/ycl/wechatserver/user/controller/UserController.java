@@ -17,14 +17,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/wechat/user")
+@RequestMapping("/capi/user")
 @Api(tags = "用户相关接口")
 public class UserController {
 
     @Resource
     private UserService userService;
 
-    @GetMapping("/info")
+    @GetMapping("/userInfo")
     @ApiOperation("获取用户信息")
     public ApiResult<UserInfo> getUserinfo(){
         UserInfo userinfo = userService.getUserinfo();
