@@ -4,7 +4,10 @@ import com.ycl.wechatserver.common.domain.vo.response.ApiResult;
 import com.ycl.wechatserver.user.domain.dto.ModifyNameDto;
 import com.ycl.wechatserver.user.domain.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ycl.wechatserver.user.domain.vo.BadgesVO;
 import com.ycl.wechatserver.user.domain.vo.UserInfo;
+
+import java.util.List;
 
 /**
  *
@@ -29,5 +32,18 @@ public interface UserService extends IService<User> {
      * @param modifyNameDto
      * @return
      */
-    void modify(ModifyNameDto modifyNameDto);
+    void modifyName(ModifyNameDto modifyNameDto);
+
+    /**
+     * 获取可选徽章
+     * @return
+     */
+    List<BadgesVO> getBadges();
+
+    /**
+     * 佩戴徽章
+     * @param itemId
+     */
+    void wearingBadge(Long badgeId);
+
 }

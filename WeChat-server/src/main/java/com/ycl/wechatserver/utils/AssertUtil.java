@@ -158,7 +158,5 @@ public class AssertUtil {
         }
         throw new BusinessException(errorEnum.getErrorCode(), MessageFormat.format(errorEnum.getErrorMsg(), arg));
     }
-
-
 }
 

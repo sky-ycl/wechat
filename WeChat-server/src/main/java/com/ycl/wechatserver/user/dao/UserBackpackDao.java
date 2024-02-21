@@ -9,6 +9,7 @@ import com.ycl.wechatserver.user.mapper.UserBackpackMapper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 public class UserBackpackDao {
@@ -45,6 +46,32 @@ public class UserBackpackDao {
                 .eq(UserBackpack::getUid, userBackpack.getUid());
         int count = userBackpackMapper.update(null, lambdaUpdateWrapper);
         return count == 1;
+    }
+
+    /**
+     * 查询用户背包徽章
+     * @param uid
+     * @param itemIdList
+     * @return
+     */
+    public List<UserBackpack> getItemById(Long uid, List<Long> itemIdList) {
+        LambdaUpdateWrapper<UserBackpack> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+        lambdaUpdateWrapper.eq(UserBackpack::getUid,uid)
+                           .eq(UserBackpack::getStatus,YesOrNoEnum.NO.getStatus())
+                           .in(UserBackpack::getItemId,itemIdList);
+        return userBackpackMapper.selectList(lambdaUpdateWrapper);
+    }
+
+
+    public UserBackpack getByIdempotent(String idempotent) {
+        LambdaQueryWrapper<UserBackpack> lambdaQueryWrapper=new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(UserBackpack::getIdempotent,idempotent);
+        return userBackpackMapper.selectOne(lambdaQueryWrapper);
+    }
+
+
+    public void save(UserBackpack userBackpack) {
+        userBackpackMapper.insert(userBackpack);
     }
 }
 

@@ -24,7 +24,7 @@ public class ItemConfig implements Serializable {
     /**
      * 物品类型 1改名卡 2徽章
      */
-    private Integer type;
+    private Long type;
 
     /**
      * 物品图片
@@ -34,6 +34,7 @@ public class ItemConfig implements Serializable {
     /**
      * 物品功能描述
      */
+    @TableField("`describe`")
     private String describe;
 
     /**
