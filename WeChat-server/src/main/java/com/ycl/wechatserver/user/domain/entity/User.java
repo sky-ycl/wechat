@@ -6,13 +6,15 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import lombok.Data;
 
 /**
  * 用户表
  * @TableName user
  */
-@TableName(value ="user")
+@TableName(value ="user",autoResultMap = true)
 @Data
 public class User implements Serializable {
     /**
@@ -54,7 +56,8 @@ public class User implements Serializable {
     /**
      * ip信息
      */
-    private Object ipInfo;
+    @TableField(value = "ip_info",typeHandler = JacksonTypeHandler.class)
+    private IpInfo ipInfo;
 
     /**
      * 佩戴的徽章id
@@ -78,4 +81,11 @@ public class User implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
+
+    public void refreshIp(String ip){
+        if(ipInfo==null){
+            ipInfo=new IpInfo();
+        }
+        ipInfo.refreshIP(ip);
+    }
 }

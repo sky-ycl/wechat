@@ -173,4 +173,19 @@ class WeChatServerApplicationTests {
         Map<String,String> map=new HashMap<>();
         ConcurrentMap<String,String> concurrentMap=new ConcurrentHashMap<>();
     }
+
+
+    @Test
+    public void testUpdate(){
+        User user = new User();
+        user.setId(1l);
+        user.setName("456");
+        userMapper.updateById(user);
+    }
+
+    @Test
+    public void testSelectById(){
+        User user = userMapper.selectById(5l);
+        System.out.println(user);
+    }
 }

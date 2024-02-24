@@ -31,4 +31,8 @@ public class UserDao {
         int count = userMapper.update(null, lambdaUpdateWrapper);
         return count == 1;
     }
+
+    public Integer updateById(User user){
+        return userMapper.updateById(user);
+    }
 }
