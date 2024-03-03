@@ -23,4 +23,7 @@ public class UserInfo {
 
     @ApiModelProperty(value = "剩余改名次数")
     private Integer modifyNameChance;
+
+    @ApiModelProperty(value = "用户权限(0普通用户 1超管)")
+    private Integer power;
 }

@@ -1,6 +1,7 @@
 package com.ycl.wechatserver.user.service;
 
 import com.ycl.wechatserver.common.domain.vo.response.ApiResult;
+import com.ycl.wechatserver.user.domain.dto.BackDTO;
 import com.ycl.wechatserver.user.domain.dto.ModifyNameDto;
 import com.ycl.wechatserver.user.domain.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -42,8 +43,15 @@ public interface UserService extends IService<User> {
 
     /**
      * 佩戴徽章
-     * @param itemId
+     * @param badgeId
      */
     void wearingBadge(Long badgeId);
+
+
+    /**
+     * 拉黑用户黑名单
+     * @param backDTO
+     */
+    void back(BackDTO backDTO);
 
 }

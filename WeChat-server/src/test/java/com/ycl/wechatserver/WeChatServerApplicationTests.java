@@ -2,9 +2,13 @@ package com.ycl.wechatserver;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ycl.wechatserver.common.exception.CommonErrorEnum;
+import com.ycl.wechatserver.user.cahce.BlackCache;
+import com.ycl.wechatserver.user.dao.BlackDao;
 import com.ycl.wechatserver.user.dao.ItemConfigDao;
+import com.ycl.wechatserver.user.domain.entity.Black;
 import com.ycl.wechatserver.user.domain.entity.ItemConfig;
 import com.ycl.wechatserver.user.domain.entity.User;
+import com.ycl.wechatserver.user.domain.enums.BlackTypeEnum;
 import com.ycl.wechatserver.user.domain.enums.IdempotentEnum;
 import com.ycl.wechatserver.user.domain.enums.ItemEnum;
 import com.ycl.wechatserver.user.mapper.ItemConfigMapper;
@@ -30,6 +34,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static com.ycl.wechatserver.common.constant.RedisConstant.USER_TOKEN_KEY;
 
@@ -54,6 +59,9 @@ class WeChatServerApplicationTests {
 
     @Resource
     private ItemConfigMapper itemConfigMapper;
+
+    @Resource
+    private BlackDao blackDao;
 
     @Test
     public void testGetAccessToken() throws WxErrorException {
@@ -168,15 +176,15 @@ class WeChatServerApplicationTests {
         long itemId = 3l;
         for (long i = itemId; i <= 6l; i++) {
             userBackpackService.acquireItem(UID, i, IdempotentEnum.UID, UID + "");
-            }
-        Set<String> set=new HashSet<>();
-        Map<String,String> map=new HashMap<>();
-        ConcurrentMap<String,String> concurrentMap=new ConcurrentHashMap<>();
+        }
+        Set<String> set = new HashSet<>();
+        Map<String, String> map = new HashMap<>();
+        ConcurrentMap<String, String> concurrentMap = new ConcurrentHashMap<>();
     }
 
 
     @Test
-    public void testUpdate(){
+    public void testUpdate() {
         User user = new User();
         user.setId(1l);
         user.setName("456");
@@ -184,8 +192,42 @@ class WeChatServerApplicationTests {
     }
 
     @Test
-    public void testSelectById(){
+    public void testSelectById() {
         User user = userMapper.selectById(5l);
         System.out.println(user);
+    }
+
+    @Test
+    public void testStream() {
+        List<String> names = Arrays.asList("Alice", "Bob", "Charlie", "David");
+        List<Integer> nameLengths = names.stream()
+                .map(String::length)
+                .collect(Collectors.toList());
+        System.out.println(nameLengths);
+    }
+
+
+    @Test
+    public void testGetBlackByType() {
+        List<Black> blackList1 = blackDao.getBlackByType(BlackTypeEnum.IP);
+        List<Black> blackList2 = blackDao.getBlackByType(BlackTypeEnum.UID);
+        Map<Integer, Set<String>> map = new HashMap<>();
+        map.put(BlackTypeEnum.UID.getType(), getBlackOfType(blackList2));
+        map.put(BlackTypeEnum.IP.getType(), getBlackOfType(blackList1));
+        System.out.println(map);
+    }
+
+    @Resource
+    private BlackCache blackCache;
+
+    @Test
+    public void testBlackCache(){
+        Map<Integer, Set<String>> map = blackCache.getBlackMap();
+        System.out.println(map);
+    }
+    public Set<String> getBlackOfType(List<Black> blackList) {
+        return blackList.stream()
+                .map(black -> String.valueOf(black.getTarget()))
+                .collect(Collectors.toSet());
     }
 }

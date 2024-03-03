@@ -1,5 +1,6 @@
 package com.ycl.wechatserver.websocket.service;
 
+import com.ycl.wechatserver.websocket.domain.vo.response.WSBaseResp;
 import io.netty.channel.Channel;
 import org.springframework.stereotype.Service;
 
@@ -31,4 +32,10 @@ public interface WebSocketService {
      * @param token
      */
     void authorize(Channel channel, String token);
+
+    /**
+     * 发送消息给所有人
+     * @param resp
+     */
+    void sendMsgToAll(WSBaseResp<?> resp);
 }

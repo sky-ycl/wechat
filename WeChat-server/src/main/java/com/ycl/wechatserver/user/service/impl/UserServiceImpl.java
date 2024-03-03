@@ -6,13 +6,18 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ycl.wechatserver.common.domain.dto.UserDto;
 import com.ycl.wechatserver.common.domain.enums.YesOrNoEnum;
+import com.ycl.wechatserver.common.event.UserBlackEvent;
+import com.ycl.wechatserver.user.dao.BlackDao;
 import com.ycl.wechatserver.user.dao.ItemConfigDao;
 import com.ycl.wechatserver.user.dao.UserBackpackDao;
 import com.ycl.wechatserver.user.dao.UserDao;
+import com.ycl.wechatserver.user.domain.dto.BackDTO;
 import com.ycl.wechatserver.user.domain.dto.ModifyNameDto;
+import com.ycl.wechatserver.user.domain.entity.Black;
 import com.ycl.wechatserver.user.domain.entity.ItemConfig;
 import com.ycl.wechatserver.user.domain.entity.User;
 import com.ycl.wechatserver.user.domain.entity.UserBackpack;
+import com.ycl.wechatserver.user.domain.enums.BlackTypeEnum;
 import com.ycl.wechatserver.user.domain.enums.ItemEnum;
 import com.ycl.wechatserver.user.domain.enums.ItemTypeEnum;
 import com.ycl.wechatserver.user.domain.vo.BadgesVO;
@@ -21,7 +26,9 @@ import com.ycl.wechatserver.user.service.UserService;
 import com.ycl.wechatserver.user.mapper.UserMapper;
 import com.ycl.wechatserver.utils.AssertUtil;
 import com.ycl.wechatserver.utils.MyThreadLocal;
-import org.springframework.cache.annotation.Cacheable;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,7 +58,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     @Resource
     private ItemConfigDao itemConfigDao;
 
+    @Resource
+    private BlackDao blackDao;
 
+    @Resource
+    private ApplicationEventPublisher applicationEventPublisher;
     /**
      * 用户进行注册
      * @param user
@@ -164,6 +175,39 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         AssertUtil.equal(item.getType(),ItemTypeEnum.BADGE.getType(),"只有徽章才能佩戴");
         // 佩戴徽章
         Boolean isWearSuccess = userDao.wearingBadge(uid, badgeId);
+    }
+
+    /**
+     * 拉黑用户黑名单
+     * @param backDTO
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void back(BackDTO backDTO) {
+        // 获取拉黑用户的id
+        Long uid = backDTO.getUid();
+        Black black = new Black();
+        black.setTarget(uid.toString());
+        black.setType(BlackTypeEnum.UID.getType());
+        blackDao.save(black);
+        User user = userDao.getById(uid);
+        blackIp(user.getIpInfo().getCreateIp());
+        blackIp(user.getIpInfo().getUpdateIp());
+        applicationEventPublisher.publishEvent(new UserBlackEvent(this,user));
+    }
+
+    private void blackIp(String ip){
+        if (StringUtils.isBlank(ip)) {
+            return;
+        }
+        try {
+            Black user = new Black();
+            user.setType(BlackTypeEnum.IP.getType());
+            user.setTarget(ip);
+            blackDao.save(user);
+        } catch (Exception e) {
+            log.error("duplicate black ip:"+ip+"");
+        }
     }
 }
 

@@ -2,6 +2,7 @@ package com.ycl.wechatserver.user.dao;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.ycl.wechatserver.user.domain.entity.User;
+import com.ycl.wechatserver.user.domain.enums.UserStatusEnum;
 import com.ycl.wechatserver.user.mapper.UserMapper;
 import org.springframework.stereotype.Service;
 
@@ -34,5 +35,13 @@ public class UserDao {
 
     public Integer updateById(User user){
         return userMapper.updateById(user);
+    }
+
+
+    public Integer modifyStatus(User user) {
+        LambdaUpdateWrapper<User> wrapper=new LambdaUpdateWrapper<>();
+        wrapper.set(User::getStatus,UserStatusEnum.BLACK.getStatus())
+                .eq(User::getId,user.getId());
+        return userMapper.update(null,wrapper);
     }
 }

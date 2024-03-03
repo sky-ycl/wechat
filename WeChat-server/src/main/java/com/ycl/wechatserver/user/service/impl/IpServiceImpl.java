@@ -11,6 +11,8 @@ import com.ycl.wechatserver.user.domain.entity.IpInfo;
 import com.ycl.wechatserver.user.domain.entity.User;
 import com.ycl.wechatserver.user.mapper.UserMapper;
 import com.ycl.wechatserver.user.service.IpService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -22,7 +24,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 @Service
-public class IpServiceImpl implements IpService {
+@Slf4j
+public class IpServiceImpl implements IpService , DisposableBean {
 
     private static ExecutorService executor = new ThreadPoolExecutor(1, 1,
             0L, TimeUnit.MILLISECONDS,
@@ -112,6 +115,16 @@ public class IpServiceImpl implements IpService {
                     System.out.println(String.format("第%d次成功,目前耗时：%dms", finalI, (date.getTime() - begin.getTime())));
                 }
             });
+        }
+    }
+
+    @Override
+    public void destroy() throws InterruptedException {
+        executor.shutdown();
+        if (!executor.awaitTermination(30, TimeUnit.SECONDS)) {//最多等30秒，处理不完就拉倒
+            if (log.isErrorEnabled()) {
+                log.error("Timed out while waiting for executor [{}] to terminate", executor);
+            }
         }
     }
 }
