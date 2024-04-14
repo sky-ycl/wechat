@@ -27,6 +27,7 @@ public class CacheConfig extends CachingConfigurerSupport {
                 .initialCapacity(100)
                 // 缓存的最大容量为200
                 .maximumSize(200));
+        
         return cacheManager;
     }
 }
